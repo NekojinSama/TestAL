@@ -8,3 +8,6 @@
 /.vs/CSC8503/FileContentIndex/read.lock
 /.vs
 *.log
+*.tlog
+*.idb
+*.pdb
