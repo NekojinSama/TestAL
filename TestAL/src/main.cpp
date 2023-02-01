@@ -1,8 +1,4 @@
-#include<iostream>
-#include <AL/al.h>
-#include <AL/alc.h>
-#include <dr_lib/dr_wav.h>
-#include <vector>
+#include "AudioFileLoader.h"
 
 //OpenAL error checking
 #define OpenAL_ErrorCheck(message)\
@@ -31,8 +27,8 @@ int main() {
 		std::cerr << "failed to get the default device for OpenAL" << std::endl;
 		return -1;
 	}
-	std::cout << "OpenAL Device: " << alcGetString(device, ALC_DEVICE_SPECIFIER) << std::endl;
-	OpenAL_ErrorCheck(device);
+	//std::cout << "OpenAL Device: " << alcGetString(AudioLoader::getDevice, ALC_DEVICE_SPECIFIER) << std::endl;
+	//OpenAL_ErrorCheck(device);
 
 
 	// Create an OpenAL audio context from the device
@@ -95,7 +91,7 @@ int main() {
 	// load a stereo file into a buffer
 	ReadWavData stereoData;
 	{
-		drwav_int16* pSampleData = drwav_open_file_and_read_pcm_frames_s16("sounds/Ring10.wav", &stereoData.channels, &stereoData.sampleRate, &stereoData.totalPCMFrameCount, nullptr);
+		drwav_int16* pSampleData = drwav_open_file_and_read_pcm_frames_s16("sounds/coin21.wav", &stereoData.channels, &stereoData.sampleRate, &stereoData.totalPCMFrameCount, nullptr);
 		if (pSampleData == NULL) {
 			std::cerr << "failed to load audio file" << std::endl;
 			return -1;
@@ -118,11 +114,11 @@ int main() {
 	// create a sound source that play's our mono sound (from the sound buffer)
 	ALuint monoSource;
 	alec(alGenSources(1, &monoSource));
-	alec(alSource3f(monoSource, AL_POSITION, 1.f, 0.f, 0.f));
+	alec(alSource3f(monoSource, AL_POSITION, 10.f, 0.f, 10.f));
 	alec(alSource3f(monoSource, AL_VELOCITY, 0.f, 0.f, 0.f));
 	alec(alSourcef(monoSource, AL_PITCH, 1.f));
 	alec(alSourcef(monoSource, AL_GAIN, 1.f));
-	alec(alSourcei(monoSource, AL_LOOPING, AL_TRUE));
+	alec(alSourcei(monoSource, AL_LOOPING, AL_FALSE));
 	alec(alSourcei(monoSource, AL_BUFFER, monoSoundBuffer));
 
 
@@ -140,7 +136,7 @@ int main() {
 	// play the mono sound source
 	alec(alSourcePlay(monoSource));
 	ALint sourceState;
-	alec(alSourcePlay(stereoSource));
+	//alec(alSourcePlay(stereoSource));
 	//alec(alGetSourcei(stereoSource, AL_SOURCE_STATE, &sourceState));
 	alec(alGetSourcei(monoSource, AL_SOURCE_STATE, &sourceState));
 	while (sourceState == AL_PLAYING)
